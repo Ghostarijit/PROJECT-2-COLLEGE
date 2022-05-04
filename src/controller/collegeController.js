@@ -16,8 +16,8 @@ const createCollege = async(req, res) => {
             // fname validation
         console.log(typeof name)
         if (!name) return res.status(400).send({ status: false, msg: "first name must be present" });
-        // if(typeof fname !== "string"||fname.trim().length ===0) return res.status(400).send({ status:false, msg: "fname should be string" });
-        // data.fname = data.fname.trim()
+        if (typeof name !== "string" || name.trim().length === 0) return res.status(400).send({ status: false, msg: "fname should be string" });
+        data.fname = data.fname.trim()
         let nname = /^[a-zA-z]{2,30}$/.test(name)
         if (!nname) return res.status(400).send({ status: false, msg: "enter valid  name " })
 
