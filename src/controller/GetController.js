@@ -11,16 +11,16 @@ const getColleges = async function(req, res) {
 
         const name = data1.name
 
-        if (data1.value) {
+        if (Object.keys(data1).length == 0) {
             return res.status(400).send({ status: false, msg: "Please Enter Data" })
 
         }
-        if (name.length == 0) {
-            return res.status(400).send({ status: false, msg: "Please Enter CollegeName" })
+        if (name == undefined) {
+            return res.status(400).send({ status: false, msg: "Please Enter CollegeName and you Must Write Key Value is # name # " })
 
         }
         if (!name) {
-            return res.status(400).send({ status: false, msg: "Please Enter Valied CollegeName" })
+            return res.status(400).send({ status: false, msg: "Please Provide Some Value of Name" })
         }
         if (!/^[a-zA-z , ;]{2,30}$/.test(name)) {
             return res.status(400).send({ status: false, msg: "Please Enter Valied Format CollegeName" })

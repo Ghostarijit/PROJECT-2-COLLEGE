@@ -8,12 +8,12 @@ const createCollege = async(req, res) => {
         let data = req.body
             //  data validation
 
-        let { name, fullName, logoLink, } = data
+        let { name, fullName, logoLink } = data
 
 
         if (Object.keys(data).length === 0) return res.status(400).send({ status: false, msg: "plz enter some data" })
-
-        // fname validation
+        if (!(data)) return res.status(400).send({ status: false, msg: "plz enter some data" })
+            // fname validation
         console.log(typeof name)
         if (!name) return res.status(400).send({ status: false, msg: "first name must be present" });
         // if(typeof fname !== "string"||fname.trim().length ===0) return res.status(400).send({ status:false, msg: "fname should be string" });
@@ -34,6 +34,12 @@ const createCollege = async(req, res) => {
 
         if (!logoLink) return res.status(400).send({ status: false, msg: "logo Link must be present" });
 
+        let regx = /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/
+            //rege = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+        let x = regx.test(logoLink)
+        if (!x) {
+            return res.status(400).send({ status: false, msg: "write the correct format for Url" })
+        }
 
 
         let college = await collegeModel.create(data)

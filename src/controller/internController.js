@@ -11,8 +11,8 @@ const createIntern = async function(req, res) {
         const data = req.body
             //  data validation
 
-        if (!data || Object.keys(data).length === 0) return res.status(400).send({ status: false, msg: "plz enter some data" })
-
+        if (!data) return res.status(400).send({ status: false, msg: "plz enter some data" })
+        if (Object.keys(data).length === 0) return res.status(400).send({ status: false, msg: "Data Should Not be Empty" })
         let { collegeId, name, mobile, email, isDeleted } = data
 
         // authorId validation
@@ -28,17 +28,8 @@ const createIntern = async function(req, res) {
         if (!id) {
             return res.status(404).send({ status: false, msg: "this College is not present." })
         }
-        //  accessing the payload authorId from request
-        // let token = req["authorId"]
 
-        //  authorization
-        //  if (token != authorId) {
-        //      return res.status(403).send({ status: false, msg: "You are not authorized to access this data" })
-        // }
-        // console.log(title)
-
-        // title validation
-
+        // name Validation
         if (!name || name === undefined) {
             return res.status(400).send({ status: false, msg: "name is not given" })
         }
@@ -46,7 +37,10 @@ const createIntern = async function(req, res) {
         name = name.trim()
 
         // mobile validation
-
+        let mob = /^[0-9]{10}$/
+        if (!mob.test(mobile)) {
+            return res.status(400).send({ status: false, msg: "Mobile number should have 10  digits only" });
+        }
         if (!mobile || mobile === undefined) {
             return res.status(400).send({ status: false, msg: "mobile is not Given" })
         }
@@ -59,7 +53,7 @@ const createIntern = async function(req, res) {
         }
 
         let regx = /^([a-zA-Z0-9\._]+)@([a-zA-Z])+\.([a-z]+)(.[a-z])?$/
-        rege = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+
         let x = regx.test(email)
         if (!x) {
             return res.status(400).send({ status: false, msg: "write the correct format for email" })
@@ -69,7 +63,7 @@ const createIntern = async function(req, res) {
         if (mail) return res.status(400).send({ status: false, msg: "this email is already present" })
         data.email = data.email.toLowerCase()
 
-        // // if isdeleted key is present
+        //  if isdeleted key is present
         if (isDeleted) {
             if (typeof isDeleted !== "boolean") {
                 return res.status(400).send({ status: false, msg: "isDeleted is boolean so,it can be either true or false" })
@@ -93,7 +87,5 @@ const createIntern = async function(req, res) {
         res.status(500).send({ status: "error", error: err.message })
     }
 }
-
-
 
 module.exports.createIntern = createIntern
