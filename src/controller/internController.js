@@ -87,8 +87,8 @@ const createIntern = async function(req, res) {
         if (check) return res.status(400).send({ status: false, msg: "this intern already exist" })
 
         // intern Creation
-        const Blog = await internModel.create(data)
-        return res.status(201).send({ status: true, data: Blog })
+        const intern = await internModel.create(data)
+        return res.status(201).send({ status: true, data: intern })
     } catch (err) {
         res.status(500).send({ status: "error", error: err.message })
     }
