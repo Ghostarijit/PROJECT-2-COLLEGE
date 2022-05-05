@@ -32,9 +32,7 @@ const createIntern = async function(req, res) {
 
         // name Validation
 
-        let num = await internModel.findOne({ name: name })
 
-        if (num) return res.status(400).send({ status: false, msg: "this name is already present" })
         if (!name || name === undefined) {
             return res.status(400).send({ status: false, msg: "name is not given" })
         }
