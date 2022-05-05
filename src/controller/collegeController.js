@@ -8,7 +8,8 @@ const createCollege = async(req, res) => {
         let data = req.body
             //  data validation
 
-        let { name, fullName, logoLink } = data
+        let { name, fullName, logoLink, isDeleted } = data
+
 
 
         if (Object.keys(data).length === 0) return res.status(400).send({ status: false, msg: "plz enter some data" })
@@ -16,8 +17,7 @@ const createCollege = async(req, res) => {
             // fname validation
         console.log(typeof name)
         if (!name) return res.status(400).send({ status: false, msg: "first name must be present" });
-        if (typeof name !== "string" || name.trim().length === 0) return res.status(400).send({ status: false, msg: "fname should be string" });
-        data.fname = data.fname.trim()
+
         let nname = /^[a-zA-z]{2,30}$/.test(name)
         if (!nname) return res.status(400).send({ status: false, msg: "enter valid  name " })
 
@@ -35,11 +35,26 @@ const createCollege = async(req, res) => {
         if (!logoLink) return res.status(400).send({ status: false, msg: "logo Link must be present" });
 
         let regx = /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/
-            //rege = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+
         let x = regx.test(logoLink)
         if (!x) {
             return res.status(400).send({ status: false, msg: "write the correct format for Url" })
         }
+
+        //  if isdeleted key is present
+        if (isDeleted) {
+            if (typeof isDeleted !== "boolean") {
+                return res.status(400).send({ status: false, msg: "isDeleted is boolean so,it can be either true or false" })
+            }
+            if (isDeleted === true) {
+                return res.status(400).send({ status: false, msg: " Already Deleted " })
+            }
+        }
+        let check = await collegeModel.find(data) //{ name: name, fullName: fullName, logoLink: logoLink })
+
+        if (check) return res.status(400).send({ status: false, msg: " name or fullName or logoLink is already Present, Please Check Something Wrong" })
+
+
 
 
         let college = await collegeModel.create(data)

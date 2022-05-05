@@ -9,7 +9,8 @@ const internModel = require("../model/internModel")
 const createIntern = async function(req, res) {
     try {
         const data = req.body
-            //  data validation
+
+        //  data validation
 
         if (!data) return res.status(400).send({ status: false, msg: "plz enter some data" })
         if (Object.keys(data).length === 0) return res.status(400).send({ status: false, msg: "Data Should Not be Empty" })
@@ -30,6 +31,10 @@ const createIntern = async function(req, res) {
         }
 
         // name Validation
+
+        let num = await internModel.findOne({ name: name })
+
+        if (num) return res.status(400).send({ status: false, msg: "this name is already present" })
         if (!name || name === undefined) {
             return res.status(400).send({ status: false, msg: "name is not given" })
         }
@@ -37,16 +42,19 @@ const createIntern = async function(req, res) {
         name = name.trim()
 
         // mobile validation
+
+        let phone = await internModel.findOne({ mobile: mobile })
+
+        if (phone) return res.status(400).send({ status: false, msg: "this mobile is already present" })
+
+        if (!mobile || mobile === undefined) {
+            return res.status(400).send({ status: false, msg: "mobile is not Given" })
+        }
         let mob = /^[0-9]{10}$/
         if (!mob.test(mobile)) {
             return res.status(400).send({ status: false, msg: "Mobile number should have 10  digits only" });
         }
-        if (!mobile || mobile === undefined) {
-            return res.status(400).send({ status: false, msg: "mobile is not Given" })
-        }
-        if (typeof mobile !== "number" && mobile.trim().length != 10 && mobile.value == "") return res.status(400).send({ status: false, msg: "please enter valid Mobile Number" });
-        data.mobile = data.mobile.trim()
-            // email validation
+
 
         if (!email) {
             return res.status(400).send({ status: false, msg: "email must be present" });
@@ -63,9 +71,9 @@ const createIntern = async function(req, res) {
         if (mail) return res.status(400).send({ status: false, msg: "this email is already present" })
         data.email = data.email.toLowerCase()
 
-        //  if isdeleted key is present
+        //  if isdeleted key is present and its true
         if (isDeleted) {
-            if (typeof isDeleted !== "boolean") {
+            if (typeof(isDeleted) !== "boolean") {
                 return res.status(400).send({ status: false, msg: "isDeleted is boolean so,it can be either true or false" })
             }
             if (isDeleted === true) {
@@ -76,7 +84,7 @@ const createIntern = async function(req, res) {
 
         console.log(data)
 
-        const check = await internModel.findOne(data)
+        const check = await internModel.findOne({ collegeId: collegeId, name: name, mobile: mobile, email: email, isDeleted: false })
         console.log(check)
         if (check) return res.status(400).send({ status: false, msg: "this intern already exist" })
 
