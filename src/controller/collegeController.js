@@ -12,7 +12,7 @@ const createCollege = async(req, res) => {
 
 
         //  data validation
-        if (Object.keys(data).length === 0) return res.status(400).send({ status: false, msg: "plz enter some data" })
+        if (Object.keys(data).length === 0) return res.status(400).send({ status: false, msg: "plz enter some data and name , fullName, logoLink must Required" })
         if (!(data)) return res.status(400).send({ status: false, msg: "plz enter some data" })
             // fname validation
         console.log(typeof name)
